@@ -1,9 +1,11 @@
 /**
  * Cryptographically-secure password generator.
- * Uses crypto.getRandomValues with rejection sampling to avoid modulo bias.
+ * Uses getRandomValues with rejection sampling to avoid modulo bias.
  *
  * @license AGPL-3.0-or-later
  */
+
+import { getWebCrypto } from "./webcrypto.js";
 
 export interface GeneratorOptions {
   length?: number;
@@ -28,7 +30,7 @@ function unbiasedIndex(max: number): number {
   const buf = new Uint32Array(1);
   let v: number;
   do {
-    crypto.getRandomValues(buf);
+    getWebCrypto().getRandomValues(buf);
     v = buf[0];
   } while (v >= limit);
   return v % max;

@@ -10,25 +10,27 @@
  * @license AGPL-3.0-or-later
  */
 
+import { getWebCrypto } from "./webcrypto.js";
+
 const PBKDF2_ITERATIONS = 250_000;
 const SALT_BYTES = 16;
 const IV_BYTES = 12;
 const KEY_BITS = 256;
 
 const subtle = (): SubtleCrypto => {
-  const c = (globalThis as { crypto?: Crypto }).crypto;
-  if (!c?.subtle) {
+  const s = getWebCrypto().subtle;
+  if (!s) {
     throw new Error(
       "WebCrypto SubtleCrypto is not available in this environment. " +
         "Use a modern browser, Node 18+ or Deno."
     );
   }
-  return c.subtle;
+  return s;
 };
 
 const randomBytes = (n: number): Uint8Array => {
   const out = new Uint8Array(n);
-  crypto.getRandomValues(out);
+  getWebCrypto().getRandomValues(out);
   return out;
 };
 
