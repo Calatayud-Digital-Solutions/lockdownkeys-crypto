@@ -1,6 +1,6 @@
 {
   "name": "@calaespi/crypto",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Client-side AES-256-GCM encryption, password generator and strength checker — the cryptographic core of Lock Down Keys.",
   "type": "module",
   "main": "./dist/index.js",

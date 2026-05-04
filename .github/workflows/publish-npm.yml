@@ -1,7 +1,6 @@
 # Publishes to npm when a SemVer tag is pushed (e.g. v0.1.1).
 # Setup: add repository secret NPM_TOKEN (npm granular access token with publish for @calaespi).
-# Release flow: bump version in package.json, commit, then:
-#   git tag vX.Y.Z && git push origin main && git push origin vX.Y.Z
+# Release flow: bump package.json, commit, push main, then tag that commit and push the tag.
 # Optional: run this workflow manually from the Actions tab (workflow_dispatch).
 
 name: Publish npm
@@ -33,7 +32,7 @@ jobs:
           TAG="${GITHUB_REF#refs/tags/v}"
           VER=$(node -e "console.log(JSON.parse(require('fs').readFileSync('package.json','utf8')).version)")
           if [ "$TAG" != "$VER" ]; then
-            echo "::error::package.json version ($VER) does not match tag (v$TAG)"
+            echo "::error::package.json has version $VER but the tag is v$TAG. Bump and commit package.json first, then create the tag on that commit (see CONTRIBUTING.md)."
             exit 1
           fi
 
