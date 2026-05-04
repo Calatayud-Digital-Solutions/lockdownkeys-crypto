@@ -35,6 +35,13 @@ const randomBytes = (n: number): Uint8Array => {
 const enc = new TextEncoder();
 const dec = new TextDecoder();
 
+/** Copy into a standalone ArrayBuffer so WebCrypto accepts the value as BufferSource. */
+function copyToArrayBuffer(data: Uint8Array): ArrayBuffer {
+  const buf = new ArrayBuffer(data.byteLength);
+  new Uint8Array(buf).set(data);
+  return buf;
+}
+
 function toBase64(bytes: Uint8Array): string {
   let bin = "";
   for (let i = 0; i < bytes.length; i++) bin += String.fromCharCode(bytes[i]);
@@ -63,14 +70,14 @@ export async function deriveKey(
 ): Promise<CryptoKey> {
   const baseKey = await subtle().importKey(
     "raw",
-    enc.encode(password),
+    copyToArrayBuffer(enc.encode(password)),
     "PBKDF2",
     false,
     ["deriveKey"]
   );
 
   return subtle().deriveKey(
-    { name: "PBKDF2", salt, iterations, hash: "SHA-256" },
+    { name: "PBKDF2", salt: copyToArrayBuffer(salt), iterations, hash: "SHA-256" },
     baseKey,
     { name: "AES-GCM", length: KEY_BITS },
     false,
@@ -94,7 +101,11 @@ export async function encrypt(
   const key = await deriveKey(password, salt);
 
   const ct = new Uint8Array(
-    await subtle().encrypt({ name: "AES-GCM", iv }, key, enc.encode(plaintext))
+    await subtle().encrypt(
+      { name: "AES-GCM", iv: copyToArrayBuffer(iv) },
+      key,
+      copyToArrayBuffer(enc.encode(plaintext))
+    )
   );
 
   const out = new Uint8Array(salt.length + iv.length + ct.length);
@@ -122,7 +133,11 @@ export async function decrypt(
 
   const key = await deriveKey(password, salt);
   try {
-    const pt = await subtle().decrypt({ name: "AES-GCM", iv }, key, ct);
+    const pt = await subtle().decrypt(
+      { name: "AES-GCM", iv: copyToArrayBuffer(iv) },
+      key,
+      copyToArrayBuffer(ct)
+    );
     return dec.decode(pt);
   } catch {
     throw new Error("Decryption failed: wrong password or corrupted data");

@@ -1,5 +1,5 @@
 /**
- * @lockdownkeys/crypto
+ * @calaespi/crypto
  * Cryptographic primitives powering Lock Down Keys — open source for auditability.
  *
  * @license AGPL-3.0-or-later

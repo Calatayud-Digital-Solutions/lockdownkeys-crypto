@@ -1,9 +1,9 @@
-# @lockdownkeys/crypto
+# @calaespi/crypto
 
 > Client-side **AES-256-GCM** encryption, cryptographically-secure **password generator** and **strength checker** — the open-source cryptographic core of [Lock Down Keys](https://lockdownkeys.com).
 
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
-[![npm](https://img.shields.io/npm/v/@lockdownkeys/crypto.svg)](https://www.npmjs.com/package/@lockdownkeys/crypto)
+[![npm](https://img.shields.io/npm/v/@calaespi/crypto.svg)](https://www.npmjs.com/package/@calaespi/crypto)
 
 ---
 
@@ -21,7 +21,7 @@ The server **never** sees plaintext, the master password, or the derived key.
 ## Install
 
 ```bash
-npm install @lockdownkeys/crypto
+npm install @calaespi/crypto
 ```
 
 Works in modern browsers, Node 18+, Deno, Bun, React Native (with WebCrypto polyfill).
@@ -29,7 +29,7 @@ Works in modern browsers, Node 18+, Deno, Bun, React Native (with WebCrypto poly
 ## Usage
 
 ```ts
-import { encrypt, decrypt, generatePassword, estimateStrength } from "@lockdownkeys/crypto";
+import { encrypt, decrypt, generatePassword, estimateStrength } from "@calaespi/crypto";
 
 // 1. Encrypt
 const blob = await encrypt("my secret note", "correct horse battery staple");
@@ -76,14 +76,14 @@ const { label, entropyBits, crackTimeSeconds } = estimateStrength(pw);
 
 This code is intentionally small (< 400 LOC) so it can be audited in an afternoon. PRs that improve security, performance, or test coverage are welcome.
 
-- 🐛 [Report a vulnerability](mailto:security@lockdownkeys.com) (responsible disclosure, please don't open public issues for sec bugs)
+- 🐛 [Report a vulnerability](mailto:info@calatayud-digital-solutions.es) (responsible disclosure, please don't open public issues for sec bugs)
 - 💬 [Open an issue](https://github.com/Calatayud-Digital-Solutions/lockdownkeys-crypto/issues)
 
 ## License
 
 **AGPL-3.0-or-later** — if you run a modified version as a network service, you must publish your changes. See [LICENSE](./LICENSE).
 
-For commercial licenses without the AGPL network clause, contact info@lockdownkeys.com.
+For commercial licenses without the AGPL network clause, contact info@calatayud-digital-solutions.es.
 
 ---
 

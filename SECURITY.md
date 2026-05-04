@@ -4,7 +4,7 @@
 
 Please **do not** open a public GitHub issue for security vulnerabilities.
 
-Report privately to **security@lockdownkeys.com**. We aim to:
+Report privately to **info@calatayud-digital-solutions.es**. We aim to:
 
 - Acknowledge receipt within **48 hours**
 - Provide an initial assessment within **7 days**
