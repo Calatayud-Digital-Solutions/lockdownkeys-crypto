@@ -21,7 +21,11 @@ npm run build
 
 Releases are automated with [`.github/workflows/publish-npm.yml`](.github/workflows/publish-npm.yml).
 
-1. Add the **`NPM_TOKEN`** secret to the GitHub repo (npm → Access Tokens → granular token with **Publish** on the `@calaespi` scope).
+1. Add the **`NPM_TOKEN`** secret to the GitHub repo. The token must allow **non-interactive** publish (CI cannot type a 2FA code):
+   - **Recommended:** [Granular access token](https://docs.npmjs.com/creating-and-viewing-access-tokens) → include org **`calaespi`** → **Packages: Read and write** for the scope (or the package).
+   - **Alternative (classic):** token type **Automation** — not "Publish". Automation tokens are meant for CI and do not require `--otp`.  
+   If you use a normal publish token or your account blocks automation, `npm publish` fails with **`EOTP` / one-time password**.
+   - In npm profile **Access** / **Security**: avoid settings that **force 2FA on every publish** without allowing automation tokens. See [2FA and tokens](https://docs.npmjs.com/about-two-factor-authentication).
 2. On `main`, bump `version` in `package.json`, **commit and push first**, then tag **that** commit and push the tag:
    ```bash
    git add package.json
