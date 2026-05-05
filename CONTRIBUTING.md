@@ -19,14 +19,18 @@ npm run build
 
 ## Publishing (`@calaespi/crypto`)
 
-Releases are automated with [`.github/workflows/publish-npm.yml`](.github/workflows/publish-npm.yml).
+Releases are automated with [`.github/workflows/publish-npm.yml`](.github/workflows/publish-npm.yml) using **[Trusted publishing (OIDC)](https://docs.npmjs.com/trusted-publishers)** so CI does **not** need a publish token or OTP (**fixes `EOTP` with 2FA**).
 
-1. Add the **`NPM_TOKEN`** secret to the GitHub repo. The token must allow **non-interactive** publish (CI cannot type a 2FA code):
-   - **Recommended:** [Granular access token](https://docs.npmjs.com/creating-and-viewing-access-tokens) → include org **`calaespi`** → **Packages: Read and write** for the scope (or the package).
-   - **Alternative (classic):** token type **Automation** — not "Publish". Automation tokens are meant for CI and do not require `--otp`.  
-   If you use a normal publish token or your account blocks automation, `npm publish` fails with **`EOTP` / one-time password**.
-   - In npm profile **Access** / **Security**: avoid settings that **force 2FA on every publish** without allowing automation tokens. See [2FA and tokens](https://docs.npmjs.com/about-two-factor-authentication).
-2. On `main`, bump `version` in `package.json`, **commit and push first**, then tag **that** commit and push the tag:
+### One-time: link npm ↔ GitHub
+
+1. On [npmjs.com](https://www.npmjs.com/), open **`@calaespi/crypto`** → **Settings** → **Trusted publishing**.
+2. Choose **GitHub Actions**. Set **Repository** and **`publish-npm.yml`** exactly (filename only, with `.yml`).
+3. `package.json` **`repository.url`** must match that GitHub repo (see [npm troubleshooting](https://docs.npmjs.com/trusted-publishers#troubleshooting)).
+4. You can remove the **`NPM_TOKEN`** repo secret if you only publish via this workflow (not needed for `npm publish` once trusted publishing works).
+
+### Every release
+
+1. On `main`, bump `version` in `package.json`, **commit and push first**, then tag **that** commit and push the tag:
    ```bash
    git add package.json
    git commit -m "chore: release 0.1.1"

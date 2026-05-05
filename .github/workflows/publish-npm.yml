@@ -1,8 +1,9 @@
-# Publishes to npm when a SemVer tag is pushed (e.g. v0.1.1).
-# NPM_TOKEN must be a Granular token (packages read/write on @calaespi) or Classic *Automation*
-# token — not a classic Publish token, or npm publish fails with EOTP in CI.
-# Release flow: bump package.json, commit, push main, then tag that commit and push the tag.
-# Optional: run this workflow manually from the Actions tab (workflow_dispatch).
+# Publishes via npm Trusted Publishing (OIDC)—no NPM_TOKEN for publish, avoids EOTP with 2FA.
+# One-time: npmjs.com → package → Settings → Trusted publishing → GitHub Actions
+#   - Repository must match package.json "repository.url"
+#   - Workflow file name (exact): publish-npm.yml
+# Requires: npm CLI ≥ 11.5.1, Node ≥ 22.14 (see https://docs.npmjs.com/trusted-publishers )
+# Release: bump package.json, push main, tag vX.Y.Z, push tag.
 
 name: Publish npm
 
@@ -23,9 +24,11 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: "22"
+          node-version: "22.14"
           registry-url: https://registry.npmjs.org
-          cache: npm
+
+      - name: npm version for OIDC publish
+        run: npm install -g npm@^11.5.1
 
       - name: Verify git tag matches package.json version
         if: startsWith(github.ref, 'refs/tags/')
@@ -42,7 +45,6 @@ jobs:
       - run: npm test
       - run: npm run build
 
+      # Provenance is generated automatically when publishing via trusted publishing (public repo + public package).
       - name: Publish to npm
-        run: npm publish --access public --provenance
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm publish --access public
