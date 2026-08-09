@@ -1,7 +1,8 @@
 # @calaespi/crypto
 
-> Client-side **AES-256-GCM** encryption, cryptographically-secure **password generator** and **strength checker** — the open-source cryptographic core of [Lock Down Keys](https://lockdownkeys.com).
+> Client-side **AES-256-GCM** encryption, cryptographically-secure **password generator** and **strength checker** used by [Lock Down Keys](https://lockdownkeys.com).
 
+[![CI](https://github.com/Calatayud-Digital-Solutions/lockdownkeys-crypto/actions/workflows/ci.yml/badge.svg)](https://github.com/Calatayud-Digital-Solutions/lockdownkeys-crypto/actions/workflows/ci.yml)
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 [![npm](https://img.shields.io/npm/v/@calaespi/crypto.svg)](https://www.npmjs.com/package/@calaespi/crypto)
 
@@ -9,14 +10,29 @@
 
 ## Why open source?
 
-Lock Down Keys is a zero-knowledge password manager. **Trust requires verification**: anyone should be able to read, audit and reproduce the cryptography that protects user data. This package contains the exact primitives running in production:
+Lock Down Keys is a zero-knowledge password manager. **Trust requires verification**: anyone should be able to read, audit and reproduce the cryptography that protects user data.
+
+This package publishes the **reusable, auditable primitives**:
 
 - 🔐 **AES-256-GCM** authenticated encryption with random 12-byte IV
-- 🔑 **PBKDF2-SHA-256**, 250 000 iterations, 16-byte salt — derived per record
+- 🔑 **PBKDF2-SHA-256**, 250 000 iterations, 16-byte salt — password-based `encrypt` / `decrypt`
 - 🎲 **`crypto.getRandomValues`** rejection-sampled to avoid modulo bias
 - 📐 **Shannon-entropy** strength estimator with common-pattern penalties
 
 The server **never** sees plaintext, the master password, or the derived key.
+
+### Relation to the Lock Down Keys vault
+
+The **production vault** (web app and browser extension) uses the **same building blocks** (WebCrypto AES-256-GCM + PBKDF2-HMAC-SHA-256 + CSPRNG), but a **different key hierarchy**:
+
+| Concern | This package (`encrypt` / `decrypt`) | Production vault |
+|---------|--------------------------------------|------------------|
+| Key model | Password derives the AES key used for that payload | Master password → KEK (PBKDF2) wraps a random DEK; fields encrypt with the DEK |
+| Default PBKDF2 iterations | **250 000** (fixed in this API) | **310 000** (stored per vault as `kdf_iterations`) |
+| Ciphertext shape | `base64(salt ‖ iv ‖ ciphertext+tag)` | `v1:` + `base64(iv ‖ ciphertext+tag)` for fields; wrapped DEK + verifier stored separately |
+| Scope | Standalone password-based encryption, generator, strength | Unlock vault, wrap/unwrap DEK, encrypt vault fields, sharing |
+
+Use this package to audit the primitives and for standalone encryption. Do **not** assume payloads from `encrypt()` are interchangeable with vault field ciphertext in the Lock Down Keys product.
 
 ## Install
 
@@ -59,9 +75,11 @@ const { label, entropyBits, crackTimeSeconds } = estimateStrength(pw);
 | Payload format   | `base64(salt ‖ iv ‖ ciphertext+tag)` |
 | RNG              | `crypto.getRandomValues` (CSPRNG, rejection-sampled) |
 
+Exported constants (`PBKDF2_ITERATIONS`, `SALT_BYTES`, `IV_BYTES`, `KEY_BITS`) match the table above.
+
 ### What this protects against
 
-- **Server compromise**: ciphertext alone is useless without the user's master password.
+- **Server compromise**: ciphertext alone is useless without the user's password.
 - **Tampering**: GCM authentication tag fails decryption on any modification.
 - **Rainbow tables**: per-record salt + 250k PBKDF2 iterations.
 - **Modulo bias** in the password generator (rejection sampling).
@@ -69,7 +87,7 @@ const { label, entropyBits, crackTimeSeconds } = estimateStrength(pw);
 ### What this does NOT protect against
 
 - A compromised client device (keylogger, malicious extension).
-- A weak master password — entropy ultimately depends on the user.
+- A weak password — entropy ultimately depends on the user.
 - Side-channel attacks on shared hardware.
 
 ## Audit & contribute

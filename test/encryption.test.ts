@@ -1,7 +1,21 @@
 import { describe, it, expect } from "vitest";
-import { encrypt, decrypt } from "../src/encryption.js";
+import {
+  encrypt,
+  decrypt,
+  PBKDF2_ITERATIONS,
+  SALT_BYTES,
+  IV_BYTES,
+  KEY_BITS,
+} from "../src/encryption.js";
 
 describe("AES-256-GCM encryption", () => {
+  it("exports documented parameter constants", () => {
+    expect(PBKDF2_ITERATIONS).toBe(250_000);
+    expect(SALT_BYTES).toBe(16);
+    expect(IV_BYTES).toBe(12);
+    expect(KEY_BITS).toBe(256);
+  });
+
   it("round-trips plaintext", async () => {
     const ct = await encrypt("hello world", "correct horse battery staple");
     expect(await decrypt(ct, "correct horse battery staple")).toBe("hello world");

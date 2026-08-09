@@ -1,6 +1,10 @@
 /**
  * AES-256-GCM client-side encryption with PBKDF2 key derivation.
  *
+ * Standalone password-based API (password → AES key per payload).
+ * The Lock Down Keys vault uses the same primitives with a KEK/DEK hierarchy
+ * and different ciphertext framing — see README “Relation to the Lock Down Keys vault”.
+ *
  * Threat model: server NEVER sees plaintext or master password.
  * All ciphertext is bound to a per-record IV and authenticated via GCM tag.
  *
@@ -12,10 +16,14 @@
 
 import { getWebCrypto } from "./webcrypto.js";
 
-const PBKDF2_ITERATIONS = 250_000;
-const SALT_BYTES = 16;
-const IV_BYTES = 12;
-const KEY_BITS = 256;
+/** PBKDF2-HMAC-SHA-256 iterations used by `encrypt` / `decrypt` in this package. */
+export const PBKDF2_ITERATIONS = 250_000;
+/** Random salt size (bytes) prepended to each `encrypt()` payload. */
+export const SALT_BYTES = 16;
+/** AES-GCM IV size (bytes). */
+export const IV_BYTES = 12;
+/** AES-GCM key length (bits). */
+export const KEY_BITS = 256;
 
 const subtle = (): SubtleCrypto => {
   const s = getWebCrypto().subtle;
