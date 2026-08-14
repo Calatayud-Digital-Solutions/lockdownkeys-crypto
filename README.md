@@ -19,7 +19,7 @@ This package publishes the **reusable, auditable primitives**:
 - 🎲 **`crypto.getRandomValues`** rejection-sampled to avoid modulo bias
 - 📐 **Shannon-entropy** strength estimator with common-pattern penalties
 
-The server **never** sees plaintext, the master password, or the derived key.
+Database and storage **never** hold plaintext, the master password, or the derived key. The client must be trusted: compromised web application code can access the master password or plaintext before encryption.
 
 ### Relation to the Lock Down Keys vault
 
@@ -79,14 +79,14 @@ Exported constants (`PBKDF2_ITERATIONS`, `SALT_BYTES`, `IV_BYTES`, `KEY_BITS`) m
 
 ### What this protects against
 
-- **Server compromise**: ciphertext alone is useless without the user's password.
+- **Database/storage compromise**: ciphertext alone is useless without the user's password.
 - **Tampering**: GCM authentication tag fails decryption on any modification.
 - **Rainbow tables**: per-record salt + 250k PBKDF2 iterations.
 - **Modulo bias** in the password generator (rejection sampling).
 
 ### What this does NOT protect against
 
-- A compromised client device (keylogger, malicious extension).
+- A compromised client (keylogger, malicious extension, or tampered web application code that can read the master password or plaintext before encryption).
 - A weak password — entropy ultimately depends on the user.
 - Side-channel attacks on shared hardware.
 

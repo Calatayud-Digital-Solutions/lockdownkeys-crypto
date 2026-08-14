@@ -6,7 +6,7 @@ import {
   SALT_BYTES,
   IV_BYTES,
   KEY_BITS,
-} from "../src/encryption.js";
+} from "../src/index.js";
 
 describe("AES-256-GCM encryption", () => {
   it("exports documented parameter constants", () => {
