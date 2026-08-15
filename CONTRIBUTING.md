@@ -17,13 +17,13 @@ npm test
 npm run build
 ```
 
-## Publishing (`@calaespi/crypto`)
+## Publishing (`@calatayud-digital-solutions/lockdownkeys-crypto`)
 
 Releases are automated with [`.github/workflows/publish-npm.yml`](.github/workflows/publish-npm.yml) using **[Trusted publishing (OIDC)](https://docs.npmjs.com/trusted-publishers)** so CI does **not** need an `NPM_TOKEN` or OTP (**fixes `EOTP` with 2FA**). Do **not** store an `NPM_TOKEN` repo secret for publish — OIDC is the supported path.
 
 ### One-time: link npm ↔ GitHub
 
-1. On [npmjs.com](https://www.npmjs.com/), open **`@calaespi/crypto`** → **Settings** → **Trusted publishing**.
+1. On [npmjs.com](https://www.npmjs.com/), open **`@calatayud-digital-solutions/lockdownkeys-crypto`** → **Settings** → **Trusted publishing**.
 2. Choose **GitHub Actions**. Set **Repository** and **`publish-npm.yml`** exactly (filename only, with `.yml`).
 3. `package.json` **`repository.url`** must match that GitHub repo (see [npm troubleshooting](https://docs.npmjs.com/trusted-publishers#troubleshooting)).
 

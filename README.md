@@ -1,10 +1,10 @@
-# @calaespi/crypto
+# @calatayud-digital-solutions/lockdownkeys-crypto
 
 > Client-side **AES-256-GCM** encryption, cryptographically-secure **password generator** and **strength checker** used by [Lock Down Keys](https://lockdownkeys.com).
 
 [![CI](https://github.com/Calatayud-Digital-Solutions/lockdownkeys-crypto/actions/workflows/ci.yml/badge.svg)](https://github.com/Calatayud-Digital-Solutions/lockdownkeys-crypto/actions/workflows/ci.yml)
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
-[![npm](https://img.shields.io/npm/v/@calaespi/crypto.svg)](https://www.npmjs.com/package/@calaespi/crypto)
+[![npm](https://img.shields.io/npm/v/@calatayud-digital-solutions/lockdownkeys-crypto.svg)](https://www.npmjs.com/package/@calatayud-digital-solutions/lockdownkeys-crypto)
 
 ---
 
@@ -37,7 +37,7 @@ Use this package to audit the primitives and for standalone encryption. Do **not
 ## Install
 
 ```bash
-npm install @calaespi/crypto
+npm install @calatayud-digital-solutions/lockdownkeys-crypto
 ```
 
 Works in modern browsers, Node 18+, Deno, Bun, React Native (with WebCrypto polyfill).
@@ -45,7 +45,7 @@ Works in modern browsers, Node 18+, Deno, Bun, React Native (with WebCrypto poly
 ## Usage
 
 ```ts
-import { encrypt, decrypt, generatePassword, estimateStrength } from "@calaespi/crypto";
+import { encrypt, decrypt, generatePassword, estimateStrength } from "@calatayud-digital-solutions/lockdownkeys-crypto";
 
 // 1. Encrypt
 const blob = await encrypt("my secret note", "correct horse battery staple");
