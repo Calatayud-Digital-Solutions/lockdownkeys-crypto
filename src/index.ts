@@ -1,5 +1,5 @@
 /**
- * @calatayud-digital-solutions/lockdownkeys-crypto
+ * @calaespi/crypto
  * Auditable client-side crypto primitives used by Lock Down Keys.
  * See README for how this relates to the production vault (KEK/DEK).
  *
